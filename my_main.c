@@ -72,7 +72,38 @@ void first_pass() {
   //in order to use name and num_frames
   //they must be extern variables
   extern int num_frames;
-  extern char name[128]; 
+  extern char name[128];
+  int i;
+  int vary = 0;
+  int base = 0;
+  int frame = 0;
+  for (i=0;i<lastop;i++) {
+    if(op[i].opcode == FRAMES){
+      frame = 1;
+    }
+    if(op[i].opcode == BASENAME){
+      base = 1;
+    }
+    if(op[i].opcode == VARY){
+      vary = 1;
+    }
+
+    if(!frame && vary){
+      printf("You messed up! You need to have frame with vary. Program is gonna exit now if that's cool with you, pal");
+      exit(0);
+    }
+    if(frame && !base){
+      strcpy(name, "default");
+      printf("You messed up! But don't worry. Basename set to default");
+    }
+    if(frame){
+      num_frames = op[1].op.frames.num_frames;
+    }
+    if(base){
+      strcpy(name, op[i].op.basename.p->name);
+    }
+  }
+	
 
   return;
 }
