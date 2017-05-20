@@ -2624,6 +2624,7 @@ extern FILE *yyin;
 
 
 int main(int argc, char **argv) {
+  argv[1] = "simple_anim.mdl";
 
   yyin = fopen(argv[1],"r");
   

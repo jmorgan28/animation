@@ -77,36 +77,39 @@ void first_pass() {
   int vary = 0;
   int base = 0;
   int frame = 0;
-  for (i=0;i<lastop;i++) {
-    if(op[i].opcode == FRAMES){
-      frame = 1;
-    }
-    if(op[i].opcode == BASENAME){
-      base = 1;
-    }
+  for (i = 0; i < lastop; i ++) {
+
     if(op[i].opcode == VARY){
       vary = 1;
     }
-
+    else if(op[i].opcode == FRAMES){
+      num_frames = op[1].op.frames.num_frames;
+      frame = 1;
+    }
+    else if(op[i].opcode == BASENAME){
+      strcpy(name, op[i].op.basename.p->name);
+      base = 1;
+    }
     if(!frame && vary){
-      printf("You messed up! You need to have frame with vary. Program is gonna exit now if that's cool with you, pal");
+      printf("You messed up! You need to have frame with vary. Program is gonna exit now if that's cool with you, pal\n");
       exit(0);
     }
-    if(frame && !base){
+    else if(frame && !base){
       strcpy(name, "default");
-      printf("You messed up! But don't worry. Basename set to default");
+      printf("You messed up! But don't worry. Basename set to default\n");
     }
-    if(frame){
-      num_frames = op[1].op.frames.num_frames;
-    }
-    if(base){
-      strcpy(name, op[i].op.basename.p->name);
-    }
+    //if(frame){
+      
+      //}
+      //if(base){
+      
+      //}
   }
 	
 
   return;
-}
+  }
+
 
 /*======== struct vary_node ** second_pass() ==========
   Inputs:   
@@ -130,6 +133,25 @@ void first_pass() {
   jdyrlandweaver
   ====================*/
 struct vary_node ** second_pass() {
+  struct vary_node ** knobs = malloc(sizeof(struct vary_node *) * num_frames);
+  int i,start, end;
+  for(i = 0; i < num_frames; i ++){
+    struct vary_node * new = NULL;
+    int j;
+    for(j = 0; j < lastop; j++){
+      if(op[j].opcode == VARY){
+	start = op[j].op.vary.start_frame;
+	end = op[i].op.vary.end_frame;
+      }
+      double varyval = ((i - start) * 1.0) / (end - start);
+      new = malloc(sizeof(struct vary_node));
+      struct vary_node * newer = NULL;
+      new->next = newer;
+      strcpy(new -> name, op[i].op.vary.p->name);
+	
+    }
+
+  }
   return NULL;
 }
 
@@ -190,7 +212,8 @@ void print_knobs() {
   jdyrlandweaver
   ====================*/
 void my_main() {
-
+  first_pass();
+  printf("where is the error\n");
   int i;
   struct matrix *tmp;
   struct stack *systems;

@@ -3,6 +3,7 @@ CFLAGS= -g
 LDFLAGS= -lm
 CC= gcc
 
+
 all: parser
 
 parser: lex.yy.c y.tab.c y.tab.h $(OBJECTS)
@@ -41,9 +42,11 @@ gmath.o: gmath.c gmath.h matrix.h
 stack.o: stack.c stack.h matrix.h
 	$(CC) $(CFLAGS) -c stack.c 
 
+run: all
+	./mdl
+
 clean:
 	rm *.o *~
 	rm y.tab.c y.tab.h
 	rm lex.yy.c
 	rm -rf mdl.dSYM
-
