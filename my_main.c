@@ -144,15 +144,17 @@ struct vary_node ** second_pass() {
 	end = op[i].op.vary.end_frame;
       }
       double varyval = ((i - start) * 1.0) / (end - start);
+      printf("%f\n", varyval);
+      
       new = malloc(sizeof(struct vary_node));
       struct vary_node * newer = NULL;
       new->next = newer;
       strcpy(new -> name, op[i].op.vary.p->name);
 	
     }
-
   }
-  return NULL;
+  printf("dogggg\n");
+  return knobs;
 }
 
 
@@ -213,6 +215,7 @@ void print_knobs() {
   ====================*/
 void my_main() {
   first_pass();
+  struct vary_node ** info = second_pass();
   printf("where is the error\n");
   int i;
   struct matrix *tmp;
@@ -228,10 +231,21 @@ void my_main() {
   g.red = 0;
   g.green = 0;
   g.blue = 0;
-
-  for (i=0;i<lastop;i++) {
-
-    printf("%d: ",i);
+  print_knobs();
+  printf("ya know\n");
+  int w;
+  for(w = 1; 0 <= num_frames; w ++){
+    int y;
+    for(y =0; y <num_frames; y ++){
+      struct vary_node * val = info[y];
+      while(NULL != val){
+	set_value(lookup_symbol(val->name), val->value);
+	val = val ->next;
+      }
+    }
+    print_knobs();
+    for (i=0;i<lastop;i++) {
+      printf("%d: ",i);
       switch (op[i].opcode)
 	{
 	case SPHERE:
@@ -385,7 +399,11 @@ void my_main() {
 	  printf("Display");
 	  display(t);
 	  break;
-    }
+	}
+      char * s = malloc(sizeof(char ));;
+      sprintf(s, "./store/%03d",w);
+      save_extension(t, s);
       printf("\n");
     }
+  }
 }
