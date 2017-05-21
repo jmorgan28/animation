@@ -141,19 +141,17 @@ struct vary_node ** second_pass() {
     for(j = 0; j < lastop; j++){
       if(op[j].opcode == VARY){
 	start = op[j].op.vary.start_frame;
-	end = op[i].op.vary.end_frame;
+	end = op[j].op.vary.end_frame; ////variables were wrong
       }
-      double varyval = ((i - start) * 1.0) / (end - start);
-      printf("%f\n", varyval);
-      
       new = malloc(sizeof(struct vary_node));
       struct vary_node * newer = NULL;
       new->next = newer;
-      strcpy(new -> name, op[i].op.vary.p->name);
+      strcpy(new -> name, op[j].op.vary.p->name);
+      new->value = (op[j].op.vary.start_val + (((j - start) * 1.0) / (end - start))) * (op[j].op.vary.end_val - op[j].op.vary.start_val);
+      printf("dogggg\n");
 	
     }
   }
-  printf("dogggg\n");
   return knobs;
 }
 
