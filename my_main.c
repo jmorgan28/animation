@@ -235,7 +235,12 @@ void my_main() {
   printf("ya know\n");
   int w;
   for(w = 1; 0 <= num_frames; w ++){
-    int y;
+    // int y;
+    //while(info[w]->next != NULL){
+    // struct vary_node * have = info;
+      //do something
+      //have = have->next;
+    // }
     for (i=0;i<lastop;i++) {
       printf("%d: ",i);
       switch (op[i].opcode)
