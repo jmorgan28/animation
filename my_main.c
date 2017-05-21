@@ -144,10 +144,12 @@ struct vary_node ** second_pass() {
 	end = op[j].op.vary.end_frame; ////variables were wrong
       }
       new = malloc(sizeof(struct vary_node));
+      knobs[i][j] = *new;
       struct vary_node * newer = NULL;
       new->next = newer;
       strcpy(new -> name, op[j].op.vary.p->name);
-      new->value = (op[j].op.vary.start_val + (((j - start) * 1.0) / (end - start))) * (op[j].op.vary.end_val - op[j].op.vary.start_val);
+      new->value = op[j].op.vary.start_val + ((j - start) / (end - start)) * (op[j].op.vary.end_val - op[j].op.vary.start_val);
+      new = new->next;
       printf("dogggg\n");
 	
     }
@@ -229,19 +231,11 @@ void my_main() {
   g.red = 0;
   g.green = 0;
   g.blue = 0;
-  print_knobs();
+  
   printf("ya know\n");
   int w;
   for(w = 1; 0 <= num_frames; w ++){
     int y;
-    for(y =0; y <num_frames; y ++){
-      struct vary_node * val = info[y];
-      while(NULL != val){
-	set_value(lookup_symbol(val->name), val->value);
-	val = val ->next;
-      }
-    }
-    print_knobs();
     for (i=0;i<lastop;i++) {
       printf("%d: ",i);
       switch (op[i].opcode)
