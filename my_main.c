@@ -216,6 +216,7 @@ void print_knobs() {
 void my_main() {
   first_pass();
   struct vary_node ** info = second_pass();
+  struct vary_node * hold;
   printf("where is the error\n");
   int i;
   struct matrix *tmp;
@@ -225,16 +226,26 @@ void my_main() {
   double step = 0.1;
   double theta;
   
-  systems = new_stack();
-  tmp = new_matrix(4, 1000);
-  clear_screen( t );
+  
   g.red = 0;
   g.green = 0;
   g.blue = 0;
   
   printf("ya know\n");
   int w;
-  for(w = 1; 0 <= num_frames; w ++){
+  for(w = 0; w < num_frames; w ++){
+    systems = new_stack();
+    tmp = new_matrix(4, 1000);
+    clear_screen(t);
+    if(num_frames >1){
+      hold = info[w];
+      while(info){
+	set_value(lookup_symbol(hold->name),hold->value);
+	hold = hold->next;
+      }
+    }
+    
+    int we;
     // int y;
     //while(info[w]->next != NULL){
     // struct vary_node * have = info;
@@ -245,6 +256,18 @@ void my_main() {
       printf("%d: ",i);
       switch (op[i].opcode)
 	{
+	case SET:
+	  set_value(lookup_symbol(op[i].op.set.p->name),op[i].op.set.p->s.value);
+	  break;
+	case SETKNOBS:
+	  we = 0;
+	  while(we < lastsym){
+	    if(symtab[we].type == SYM_VALUE){
+	      symtab[we].s.value = op[i].op.setknobs.value;
+	    }
+	    we ++;
+	  }
+	  break;
 	case SPHERE:
 	  printf("Sphere: %6.2f %6.2f %6.2f r=%6.2f",
 		 op[i].op.sphere.d[0],op[i].op.sphere.d[1],
